@@ -8,7 +8,7 @@ def find(x, parent):
     while x != (0,0):
         found_path.append(parent[x])
         x = parent[x]
-    found_path.reverse
+    found_path.reverse()
 
     for cell in found_path:
         yield cell

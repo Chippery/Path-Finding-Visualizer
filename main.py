@@ -47,6 +47,7 @@ print(f"Apple at: ({apple_col},{apple_row})") # apple_col = x, apple_row = y
 
 parent = {}
 bfs_steps = bfs(matrix, start, target, parent)
+path_steps = find(target, parent)
 
 bfs_finished = False
 
