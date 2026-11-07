@@ -19,7 +19,9 @@ while run:
 
     for i in range(rect_w, (width-rect_w), rect_w): # Rows, stop 1 rect before edge of window, step by rectangle width
         for j in range(rect_l, (height-rect_l), rect_l): # Cols, stop 1 rect before edge of window, step by rectangle length
-            pygame.draw.rect(screen, (255, 0, 0), (i, j, rect_w, rect_l), width=1) # Create Rectangle -> (x, y, width, length)
+            pygame.draw.rect(screen, (255,255,255), (i, j, rect_w, rect_l))
+            pygame.draw.rect(screen, (26, 43, 130), (i, j, rect_w, rect_l), width=1) # Create Rectangle -> (x, y, width, length)
+            
 
     pygame.display.flip()
 
