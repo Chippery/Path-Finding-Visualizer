@@ -4,8 +4,9 @@ pygame.init()
 
 width = 800
 height = 600
-rect_w = 50
-rect_l = 50
+
+rect_w = 25
+rect_l = 25
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Visualizer")
@@ -16,10 +17,9 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
-    for i in range(rect_w, (width-50), 100):
-        for j in range(rect_l, (height-50), 100):
+    for i in range(rect_w, (width-rect_w), rect_w): # Rows, stop 1 rect before edge of window, step by rectangle width
+        for j in range(rect_l, (height-rect_l), rect_l): # Cols, stop 1 rect before edge of window, step by rectangle length
             pygame.draw.rect(screen, (255, 0, 0), (i, j, rect_w, rect_l), width=1) # Create Rectangle -> (x, y, width, length)
-    # pygame.draw.rect(screen, (255, 0, 0), (150, 50, 100, 100), width=1)
 
     pygame.display.flip()
 
