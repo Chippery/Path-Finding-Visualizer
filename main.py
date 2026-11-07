@@ -23,7 +23,8 @@ apple_row, apple_col = random.randrange(row), random.randrange(col) # Set apple 
 matrix[apple_row][apple_col] = 1 # 1 = Not empty
 print(f"Apple at: ({apple_col},{apple_row})") # apple_col = x, apple_row = y
 
-pygame.draw.rect(screen, (255,0,0), ((apple_col + 1)* rect_l, (apple_row + 1) * rect_w,rect_w, rect_l)) # apple_col/row + 1 cs not starting at 0
+start = pygame.draw.rect(screen, (0,0,255), (rect_w, rect_l, rect_w, rect_l))
+apple = pygame.draw.rect(screen, (255,0,0), ((apple_col + 1)* rect_l, (apple_row + 1) * rect_w,rect_w, rect_l)) # apple_col/row + 1 cs not starting at 0
 
 run = True
 while run:
