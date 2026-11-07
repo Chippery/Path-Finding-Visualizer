@@ -1,5 +1,5 @@
 import pygame
-import random
+from grid import create_grid, place_apple, generate_walls
 
 pygame.init()
 
@@ -13,46 +13,39 @@ pygame.display.set_caption("Visualizer")
 col = len(range(rect_w, width - rect_w, rect_w))
 row = len(range(rect_l, height - rect_l, rect_l))
 
-for i in range(rect_w, (width-rect_w), rect_w): # Cols, stop 1 rect before edge of window, step by rectangle width
-    for j in range(rect_l, (height-rect_l), rect_l): # Rows, stop 1 rect before edge of window, step by rectangle length
-        pygame.draw.rect(screen, (255,255,255), (i, j, rect_w, rect_l)) # Make bg rects -> (x, y, width, length)
+matrix = create_grid(row, col)
+matrix[0][0] = 3 # Start Point
 
-matrix = [[0 for _ in range(col)] for _ in range(row)] # reference coord matrix[row][col]
-apple_col, apple_row = random.randrange(col), random.randrange(row) # Set apple at random x,y pos
+apple_row, apple_col = place_apple(matrix) # Set apple at random x,y pos
 
-if random.choice([True, False]):
-    apple_row = random.randrange(row)
-    apple_col = col - 1  # Last column
-else:
-    apple_row = row - 1  # Last row
-    apple_col = random.randrange(col)
+matrix = generate_walls(matrix, 0.35)
 
 matrix[apple_row][apple_col] = 1 # 1 = Not empty
-print(f"Apple at: ({apple_col},{apple_row})") # apple_col = x, apple_row = y
 
 start = pygame.draw.rect(screen, (0,0,255), (rect_w, rect_l, rect_w, rect_l))
 apple = pygame.draw.rect(screen, (255,0,0), ((apple_col + 1)* rect_w, (apple_row + 1) * rect_l, rect_w, rect_l))
 walls = 0
 
-for j in range(int((row * col) * percent )): # Cover percent% of board with walls
-    wall_x, wall_y = random.randrange(col), random.randrange(row)
+for r in range(row):
+    for c in range(col):
+        color = (255,255,255)
 
-    while (wall_x, wall_y) == (apple_col, apple_row) or (wall_x, wall_y) == (0, 0): # Change wall pos if on apple/start
-        wall_x = random.randrange(col)
-        wall_y = random.randrange(row)
-        print("Wall landed on apple/starting point")
+        if matrix[r][c] == 0:
+            color = (255, 255, 255)  # Empty
+        elif matrix[r][c] == 1:
+            color = (255, 0, 0)      # Apple
+        elif matrix[r][c] == 2:
+            color = (0, 255, 0)      # Wall
+        elif matrix[r][c] == 3:
+            color = (0, 0, 255)      # Start
 
-    pygame.draw.rect(screen, (0,255,0), ((wall_x + 1) * rect_w, (wall_y + 1) * rect_l, rect_w, rect_l))
+        x = (c + 1) * rect_w    # +1 Add margin
+        y = (r + 1) * rect_l
 
-    matrix[wall_y][wall_x] = 2
+        pygame.draw.rect(screen, color, (x, y, rect_w, rect_l))
+        pygame.draw.rect(screen, (26, 43, 130),(x, y, rect_w, rect_l), width=1)
 
-    walls += 1
-
-for i in range(rect_w, (width-rect_w), rect_w): # Make borders after walls, apples, paths
-    for j in range(rect_l, (height-rect_l), rect_l):
-        pygame.draw.rect(screen, (26, 43, 130), (i, j, rect_w, rect_l), width=1) 
-print(f'Number of walls: {walls}/{row*col}')
-
+print(f"Apple at: ({apple_col},{apple_row})") # apple_col = x, apple_row = y
 print(matrix)
 
 run = True
