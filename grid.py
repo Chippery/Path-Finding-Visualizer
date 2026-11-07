@@ -4,7 +4,7 @@ def create_grid(rows, cols):
     return [[0 for _ in range(cols)] for _ in range(rows)]
 
 
-def place_apple(matrix):
+def place_apple(matrix): # Pass matrix[][]
     rows = len(matrix)
     cols = len(matrix[0])
 
@@ -24,7 +24,7 @@ def generate_walls(matrix, percent):
     rows = len(matrix)
     cols = len(matrix[0])
 
-    wall_count = min(int(rows * cols * percent), rows * cols - 2)
+    wall_count = min(int(rows * cols * percent), rows * cols - 2) # Max walls - 2 start,apple
 
     for _ in range(wall_count):
         wall_row = random.randrange(rows)
