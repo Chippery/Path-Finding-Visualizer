@@ -1,6 +1,6 @@
 import pygame
 from grid import create_grid, place_apple, generate_walls
-from algorithms.bfs import bfs
+from algorithms.bfs import bfs, find
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -25,8 +25,6 @@ matrix[apple_row][apple_col] = 1 # 1 = Not empty
 start = (0,0)
 target = (apple_row,apple_col)
 
-bfs_steps = bfs(matrix, start, target)
-
 for r in range(row):
     for c in range(col):
         color = (255,255,255)
@@ -36,7 +34,7 @@ for r in range(row):
         elif matrix[r][c] == 1:
             color = (255, 0, 0)      # Apple
         elif matrix[r][c] == 2:
-            color = (0, 255, 0)      # Wall
+            color = (26, 43, 130)      # Wall
         elif matrix[r][c] == 3:
             color = (0, 0, 255)      # Start
 
@@ -47,23 +45,48 @@ for r in range(row):
         pygame.draw.rect(screen, (26, 43, 130),(x, y, rect_w, rect_l), width=1)
 print(f"Apple at: ({apple_col},{apple_row})") # apple_col = x, apple_row = y
 
+parent = {}
+bfs_steps = bfs(matrix, start, target, parent)
+
+bfs_finished = False
+
 run = True
 while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
 
-    step = next(bfs_steps, None)
+    if not bfs_finished:
+        step = next(bfs_steps, None)
 
-    if step is not None:
-        r, c = step
+        if step is not None:
+            r, c = step
 
-        x = (c + 1) * rect_w
-        y = (r + 1) * rect_l
+            x = (c + 1) * rect_w
+            y = (r + 1) * rect_l
 
-        pygame.draw.rect(screen, (255, 255, 0), (x, y, rect_w, rect_l))
-        pygame.draw.rect(screen, (26, 43, 130), (x, y, rect_w, rect_l), width=1)
+            pygame.draw.rect(screen, (255, 255, 0), (x, y, rect_w, rect_l))
+            pygame.draw.rect(screen, (26, 43, 130), (x, y, rect_w, rect_l), width=1)
+        else:
+            bfs_finished = True
+
+            if target in parent:
+                path_steps = find(target, parent)
+            else:
+                print("No path found!")
+
+    elif path_steps is not None:
+        path = next(path_steps, None)
+
+        if path is not None:
+            r, c = path
+
+            x = (c + 1) * rect_w
+            y = (r + 1) * rect_l
+
+            pygame.draw.rect(screen, (0, 255, 0), (x, y, rect_w, rect_l))
+            pygame.draw.rect(screen, (26, 43, 130), (x, y, rect_w, rect_l), width=1)
 
     pygame.display.flip()
-    clock.tick(4)
+    clock.tick(5)
 pygame.quit()
