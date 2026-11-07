@@ -4,7 +4,7 @@ import random
 pygame.init()
 
 width, height = 900, 600
-rect_w, rect_l= 50,50
+rect_w, rect_l= 50,50 # Dimensions of grid
 percent = 0.5
 
 screen = pygame.display.set_mode((width, height))
@@ -19,8 +19,13 @@ for i in range(rect_w, (width-rect_w), rect_w): # Cols, stop 1 rect before edge 
 
 matrix = [[0 for _ in range(col)] for _ in range(row)] # reference coord matrix[row][col]
 apple_col, apple_row = random.randrange(col), random.randrange(row) # Set apple at random x,y pos
-while (apple_col,apple_row) == (0,0):
-    apple_col, apple_row = random.randrange(col), random.randrange(row)
+
+if random.choice([True, False]):
+    apple_row = random.randrange(row)
+    apple_col = col - 1  # Last column
+else:
+    apple_row = row - 1  # Last row
+    apple_col = random.randrange(col)
 
 matrix[apple_row][apple_col] = 1 # 1 = Not empty
 print(f"Apple at: ({apple_col},{apple_row})") # apple_col = x, apple_row = y
