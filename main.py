@@ -1,7 +1,8 @@
 import pygame
 from grid import create_grid, place_apple, generate_walls
-from algorithms.bfs import bfs, find
+from algorithms.bfs import bfs
 from algorithms.dfs import dfs_matrix
+from algorithms.dijkstra import dijkstra
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -9,6 +10,7 @@ clock = pygame.time.Clock()
 width, height = 900, 600
 rect_w, rect_l= 50,50 # Dimensions of grid
 percent = 0.25
+found_path = []
 
 def draw_grid(screen, matrix):
     for r in range(len(matrix)):
@@ -30,6 +32,19 @@ def draw_grid(screen, matrix):
             if matrix[r][c] != 2:
                 pygame.draw.rect(screen, (26, 43, 130), (x, y, rect_w, rect_l), 1)
 
+def find(x, parent, start):
+    found_path.append(x)
+    
+    while x != start:
+        found_path.append(parent[x])
+        x = parent[x]
+    found_path.reverse()
+
+    for cell in found_path:
+        yield cell
+    
+    return found_path[::-1]
+
 def animate_search(screen, steps, finished, parent, target):
     if steps is not None and not finished: # If algorithm exists and isn't finished
         step = next(steps, None)
@@ -47,7 +62,7 @@ def animate_search(screen, steps, finished, parent, target):
             finished = True
 
             if target in parent:
-                path_steps = find(target, parent)
+                path_steps = find(target, parent, start)
             else:
                 path_steps = None
                 print("No path found!")
@@ -79,7 +94,6 @@ for name, button in buttons.items():
 
 button_rect = pygame.Rect(50, 10, 100, 25)
 BUTTON_COLOR = (0, 128, 255)
-HOVER_COLOR = (0, 200, 255)
 font = pygame.font.SysFont(None, 25)
 
 selected_algorithm = "BFS"
@@ -101,14 +115,11 @@ draw_grid(screen,matrix)
 print(f"Apple at: ({apple_col},{apple_row})") # apple_col = x, apple_row = y
 
 # Steps returns generator of which cells algorithm will visit next
-bfs_steps = None
-dfs_steps = None
-path_steps = None # Generates coordinates from start to apple of correct path
+algorithm_steps = None
+algorithm_finished = True
+active_algorithm = None
 
-bfs_finished = True
-dfs_finished = True
-dijkstra_finished = False
-a_star = False
+path_steps = None # Generates coordinates from start to apple of correct path
 
 parent = {}
 
@@ -129,9 +140,11 @@ while run:
                             print("Selected BFS")
 
                             parent = {}
-                            bfs_finished = False
-                            path_steps = None
-                            bfs_steps = bfs(matrix, start, target, parent)
+                            found_path = []
+
+                            active_algorithm = "bfs"
+                            algorithm_steps = bfs(matrix, start, target, parent)
+                            algorithm_finished = False
                             
                             draw_grid(screen, matrix)
                             
@@ -139,28 +152,33 @@ while run:
                             print("Selected DFS")
 
                             parent = {}
-                            dfs_finished = False
-                            bfs_finished = True
-                            path_steps = None
-                            dfs_steps = dfs_matrix(matrix, start, target, parent)
+                            found_path = []
+
+                            active_algorithm = "dfs"
+                            algorithm_steps = dfs_matrix(matrix, start, target, parent)
+                            algorithm_finished = False
 
                             draw_grid(screen, matrix)
 
                         elif name == "Dijkstra":
                             print("Selected Dijkstra")
+
+                            parent = {}
+                            found_path = []
+
+                            active_algorithm = "dijkstra"
+                            algorithm_steps = dijkstra(matrix, start, target, parent)
+                            algorithm_finished = False
+
+                            draw_grid(screen, matrix)
+
                         elif name == "A*":
                             print("Selected A*")
 
-    if bfs_steps is not None and not bfs_finished: # Bfs Search
-        bfs_finished, new_path = animate_search(screen, bfs_steps, bfs_finished, parent, target)
+    if algorithm_steps is not None and not algorithm_finished: # Bfs Search
+        algorithm_finished, new_path = animate_search(screen, algorithm_steps, algorithm_finished, parent, target)
 
         if new_path is not None: # If path isn't finished
-            path_steps = new_path
-
-    elif dfs_steps is not None and not dfs_finished:
-        dfs_finished, new_path = animate_search(screen, dfs_steps, dfs_finished, parent, target)
-
-        if new_path is not None:
             path_steps = new_path
 
     elif path_steps is not None:    # Draw correct Path
