@@ -35,9 +35,8 @@ def bfs(matrix, start, target, parent):
             
             if (r, c) == target: # If reached apple
                 print("Reached Apple")
-                # print(parent)
 
-                return find(next(reversed(parent)), parent)
+                return 
 
             for dr,dc in moves: # Move to neighbors
                 nr = r + dr
@@ -47,7 +46,6 @@ def bfs(matrix, start, target, parent):
                     visit.add((nr, nc))
                     if 0 <= nr < rows and  0 <= nc < cols:
                         parent[(nr, nc)] = (r,c)
-                    # for child, previous in parent.items():
-                    #     print(f"{child} <- {previous}")
+                        
     print("No path to apple")
     return visit
