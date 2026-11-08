@@ -1,20 +1,5 @@
 from collections import deque
 
-found_path = []
-
-def find(x, parent):
-    found_path.append(x)
-    
-    while x != (0,0):
-        found_path.append(parent[x])
-        x = parent[x]
-    found_path.reverse()
-
-    for cell in found_path:
-        yield cell
-    
-    return found_path[::-1]
-
 def bfs(matrix, start, target, parent):
     rows, cols = len(matrix), len(matrix[0])
     visit = {start}
@@ -28,14 +13,13 @@ def bfs(matrix, start, target, parent):
         for i in range(len(q)):
             r, c = q.popleft()
 
-            if r < 0 or r == rows or c < 0 or c >= cols or matrix[r][c] == 2: # Check bounds
+            if r < 0 or r >= rows or c < 0 or c >= cols or matrix[r][c] == 2: # Check bounds
                 continue
 
             yield (r,c)
             
             if (r, c) == target: # If reached apple
                 print("Reached Apple")
-
                 return 
 
             for dr,dc in moves: # Move to neighbors
@@ -48,4 +32,3 @@ def bfs(matrix, start, target, parent):
                         parent[(nr, nc)] = (r,c)
                         
     print("No path to apple")
-    return visit
