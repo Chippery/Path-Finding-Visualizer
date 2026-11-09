@@ -75,13 +75,13 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Visualizer")
 
 buttons = {
-    "BFS": pygame.Rect(50, 10, 100, 40),
-    "DFS": pygame.Rect(160, 10, 100, 40),
-    "Dijkstra": pygame.Rect(270, 10, 100, 40),
-    "A*": pygame.Rect(380, 10, 100, 40)
+    "BFS": pygame.Rect(0, rect_l, rect_w, rect_l), # x, y, width, length
+    "DFS": pygame.Rect(0, (rect_l * 2) + 10, rect_l, rect_w),
+    "Dijkstra": pygame.Rect(0, (rect_l * 3) + 20, rect_l, rect_w),
+    "A*": pygame.Rect(0, (rect_l * 4) + 30, rect_l, rect_w)
 }
 
-font = pygame.font.SysFont(None, 25)
+font = pygame.font.SysFont(None, 20)
 
 # Inside your game loop
 for name, button in buttons.items():
@@ -94,7 +94,6 @@ for name, button in buttons.items():
 
 button_rect = pygame.Rect(50, 10, 100, 25)
 BUTTON_COLOR = (0, 128, 255)
-font = pygame.font.SysFont(None, 25)
 
 selected_algorithm = "BFS"
 
@@ -175,7 +174,7 @@ while run:
                         elif name == "A*":
                             print("Selected A*")
 
-    if algorithm_steps is not None and not algorithm_finished: # Bfs Search
+    if algorithm_steps is not None and not algorithm_finished: # General Search
         algorithm_finished, new_path = animate_search(screen, algorithm_steps, algorithm_finished, parent, target)
 
         if new_path is not None: # If path isn't finished
