@@ -25,9 +25,9 @@ def bfs(matrix, start, target, parent):
                 if (0 <= nr < rows and 0 <= nc < cols   # Not negative coordinates
                     and matrix[nr][nc] != 2             # Not a wall
                     and (nr, nc) not in visit):         # Not already seen
+                    
                     q.append((nr, nc))
                     visit.add((nr, nc))
-                    if 0 <= nr < rows and  0 <= nc < cols: # Not - coordinates
-                        parent[(nr, nc)] = (r,c)
+                    parent[(nr, nc)] = (r,c)
                         
     print("No path to apple")
