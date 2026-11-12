@@ -95,8 +95,6 @@ for name, button in buttons.items():
 button_rect = pygame.Rect(50, 10, 100, 25)
 BUTTON_COLOR = (0, 128, 255)
 
-selected_algorithm = "BFS"
-
 col = len(range(rect_w, width - rect_w, rect_w))
 row = len(range(rect_l, height - rect_l, rect_l))
 

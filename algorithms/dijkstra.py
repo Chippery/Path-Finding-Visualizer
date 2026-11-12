@@ -16,9 +16,6 @@ def dijkstra(matrix, start, target, parent):
     while minHeap:
         distance, (r,c) = heapq.heappop(minHeap)
 
-        if (r < 0 or r >= rows or c < 0 or c >= cols) or matrix[r][c] == 2 or distance > distances[(r, c)]: # Check bounds
-            continue
-
         yield (r,c)
 
         if (r, c) == target: # If reached apple
@@ -29,8 +26,8 @@ def dijkstra(matrix, start, target, parent):
             nr = r + dr
             nc = c + dc
 
-            if 0 <= nr < rows and  0 <= nc < cols and matrix[nr][nc] != 2: # Only add if not negative coordinate
-
+            if (0 <= nr < rows and  0 <= nc < cols # In Bounds
+                and matrix[nr][nc] != 2):          # Not a Wall
 
                 new_dist = distances[(r,c)] + 1 # Determine distance of node from start
 
